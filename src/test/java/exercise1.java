@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.EyesRunner;
+import com.applitools.eyes.MatchLevel;
 import com.applitools.eyes.selenium.ClassicRunner;
 import com.applitools.eyes.selenium.Eyes;
 
@@ -24,13 +25,14 @@ public class exercise1 {
 		  public void beforeClass() {
 			System.setProperty("webdriver.chrome.driver", ".\\src\\test\\resources\\Libraby\\chromedriver.exe");
 			
-			driver=new ChromeDriver();
-			batch=new BatchInfo("Demo Applitools");
+		     driver=new ChromeDriver();
+			 batch=new BatchInfo("Demo Applitools");
 			 
 			 runner=new ClassicRunner();
             
 			 
 		  }	
+		
 		
 		@Test
 		public void login() {
@@ -43,7 +45,7 @@ public class exercise1 {
 			driver.findElement(By.xpath("//input[@id='password']")).sendKeys("12345678@aA");
 			
 			
-			 scrollToElement(driver.findElement(By.xpath("//button[@id='login']")));
+			 //scrollToElement(driver.findElement(By.xpath("//button[@id='login']")));
 			
 			driver.findElement(By.xpath("//button[@id='login']")).click();
 			
@@ -52,7 +54,7 @@ public class exercise1 {
 		}
 		
 		
-		@Test
+		/*@Test
 		 public void testCheckWindow() {
 			 Eyes eyes= new Eyes(runner);
 			 
@@ -63,26 +65,53 @@ public class exercise1 {
 			eyes.open(driver, "Demo Applitools", "testCheckWindow");
 			
 		    //String xpathSelector=String.format("//ul[@class='menu-list']/li[starts-with(@id,'item')and(.='%s')]");
-		    By book=By.xpath("//ul[@class='menu-list']/li/span[(text()='Book Store')]");
-			By searchBox= By.xpath("//input[@id='searchBox']");
-		
-			 WebElement element=driver.findElement(book);
-			 scrollToElement(element);
-			 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-			 element.click();
-			 
-			 eyes.checkWindow("Book Store");
-			 
+		    
 			
-			 driver.findElement(searchBox).sendKeys("Learning Javascript");
-			 driver.findElement(By.xpath("//span[@id='basic-addon2']")).click();
-			 
+		
+			goToMenuBook();
+			eyes.checkWindow("Book Store");
+			
+			searchBook("Learning Javascript");
+			
 			 eyes.checkWindow("Search book");
 			 eyes.close();
+			 } */
+		
+			 @Test
+			 public void testDynamicContent() {
+				 Eyes eyes= new Eyes(runner);
+				 
+				 eyes.setApiKey("my2100ii3aHg6VvqJv699Mc0bcVGqjD3rhpTWk6WiDmhOA110");
+				 
+				 eyes.setBatch(batch);
+				 eyes.open(driver, "Demo applitool", "TestDynamicContent");
+				 goToMenuBook();
+				 eyes.checkWindow("Book Store");
+				 
+				 
+				 String searchKey="Understanding ECMA";
+				 searchBook(searchKey);
+				 
+				 
+				 eyes.setMatchLevel(MatchLevel.CONTENT);
+				 eyes.checkWindow("Search book");
+				 eyes.close();
+				 
 			 }
 			 
-			 
-		 
+		 public void goToMenuBook() {
+			 By book=By.xpath("//ul[@class='menu-list']/li/span[(text()='Book Store')]");
+				
+				 WebElement element=driver.findElement(book);
+				 scrollToElement(element);
+				 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+				 element.click();
+		 }
+		 public void searchBook(String search) {
+			 By searchBox= By.xpath("//input[@id='searchBox']");
+			 driver.findElement(searchBox).sendKeys(search);
+			 driver.findElement(By.xpath("//span[@id='basic-addon2']")).click();
+		 }
 		public void scrollToElement(WebElement element) {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].scrollIntoView(true);", element);
